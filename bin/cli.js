@@ -7,7 +7,6 @@ const path = require('path');
 const glob = require('glob');
 
 const Parser = require('../lib/parser');
-const Commentor = require('../lib/commentor');
 const ReadmeGenerator = require('../lib/readme');
 const NeandocAssistant = require('../lib/mcp-client');
 
@@ -47,7 +46,7 @@ program
 
       // Handle apply mode
       if (options.apply) {
-        await handleApplyMode(options.apply, directory);
+        await handleApplyMode(options.apply);
         return;
       }
 
@@ -143,7 +142,7 @@ async function findCodeFiles(directory) {
   return [...new Set(files)]; // Remove duplicates
 }
 
-async function handleApplyMode(responseFile, directory) {
+async function handleApplyMode(responseFile) {
   console.log(chalk.blue(`📝 Applying Claude response from: ${responseFile}`));
   
   if (!await fs.pathExists(responseFile)) {
@@ -151,8 +150,9 @@ async function handleApplyMode(responseFile, directory) {
     process.exit(1);
   }
   
-  const response = await fs.readFile(responseFile, 'utf8');
-  const commentor = new Commentor();
+  // TODO: Implement Claude response parsing and application
+  // const response = await fs.readFile(responseFile, 'utf8');
+  // const commentor = new Commentor();
   
   // Parse Claude's response and apply comments
   // This would need to be implemented based on Claude's response format
@@ -170,5 +170,8 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error(chalk.red('💥 Unhandled Rejection at:'), promise, 'reason:', reason);
   process.exit(1);
 });
+
+// Parse command line arguments
+program.parse(process.argv);
 
 module.exports = program;

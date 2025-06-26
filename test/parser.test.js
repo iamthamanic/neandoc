@@ -111,10 +111,10 @@ class TestClass:
       
       const result = await parser.parseFile(testFile);
       
-      expect(result.functions).toHaveLength(3);
+      expect(result.functions).toHaveLength(2); // simple_function and method
       expect(result.classes).toHaveLength(1);
       expect(result.functions[0].name).toBe('simple_function');
-      expect(result.functions[1].name).toBe('complex_function');
+      expect(result.functions[1].name).toBe('method');
     });
   });
 

@@ -2,20 +2,19 @@
 
 🦣 **Primal Code. Modern Docs.**
 
-AI-powered CLI tool for automatic code documentation. Neandoc generates technical comments for developers AND simple explanations for non-programmers, making your code accessible to everyone.
+Intelligenter Dokumentations-Assistent, der kontinuierlich deinen Code überwacht und Claude automatisch auffordert, fehlende Kommentare zu schreiben. Generiert technische Erklärungen für Entwickler UND einfache Erklärungen für Laien.
 
 ## Features
 
-- 🖥️ Command Line Interface
-- 📝 TypeScript Support  
-- 🧪 Testing Framework
-- ⚛️ Multi-language support (JS, TS, Python, Java, C++, C#, PHP, Ruby, Go)
-- 🤖 AI-powered documentation generation
-- 📚 Automatic README.md creation and updates
-- 🔄 Dry-run mode for previewing changes
-- 🎯 Selective commenting (functions only, classes only)
-- 🌐 MCP (Model Context Protocol) integration
-- 📖 Dual-level explanations (technical + simple)
+- 🔍 **Intelligente Lücken-Erkennung** - Unterscheidet technische vs. einfache Kommentare
+- 🤖 **Automatische Claude-Prompts** - Generiert perfekt formatierte Aufträge für Claude
+- 👁️ **Watch-Mode** - Kontinuierliche Überwachung alle X Minuten
+- 🔄 **Daemon-Mode** - Läuft persistent im Hintergrund
+- 📊 **Multi-File Analyse** - Comprehensive Prompts für ganze Projekte
+- 🛡️ **File-Safety** - Backup-System für sichere Operationen
+- ⚛️ **Multi-Language Support** (JS, TS, Python, Java, C++, C#, PHP, Ruby, Go)
+- 📖 **Dual-Level Explanations** (technisch + einfach)
+- 📚 **README Generation** - Automatische Projekt-Dokumentation
 
 ## Installation
 
@@ -25,21 +24,34 @@ npm install -g neandoc
 
 ## Usage
 
+### **Einmalige Analyse:**
 ```bash
-# Document all files in ./src directory
+# Analysiere Code und generiere Claude-Prompt
 npx neandoc ./src
 
-# Create or update README.md
-npx neandoc ./project --readme
+# Mit README-Generierung
+npx neandoc ./src --readme
 
-# Preview changes without modifying files
+# Preview-Modus (keine Änderungen)
 npx neandoc ./src --dry-run
+```
 
-# Comment only functions
-npx neandoc ./src --only-functions
+### **Watch-Mode (Game-Changer!):**
+```bash
+# Überwachung alle 5 Minuten
+npx neandoc ./src --watch --interval 5
 
-# Skip README generation
-npx neandoc ./src --no-readme
+# Daemon-Mode (Hintergrund)
+npx neandoc ./src --daemon --interval 10
+
+# Mit README-Updates
+npx neandoc ./src --watch --readme
+```
+
+### **Apply-Mode:**
+```bash
+# Claude-Response anwenden (Coming Soon)
+npx neandoc ./src --apply claude-response.md
 ```
 
 ## How it works
@@ -55,12 +67,27 @@ config/  # Configuration files
 lib/     # Library modules
 ```
 
-### Core Workflow
-1. **Input Processing**: Scans your codebase and identifies functions, classes, and variables
-2. **AI Analysis**: Uses Claude (via MCP), OpenAI, or other LLMs to understand code context
-3. **Comment Generation**: Creates both technical and simple explanations
-4. **File Updates**: Intelligently inserts comments without breaking existing code
-5. **README Generation**: Creates comprehensive documentation with "How it works" sections
+### **Neuer intelligenter Workflow:**
+
+#### **1. Automatische Analyse:**
+1. **Code-Scanning** - Findet Funktionen, Klassen, Variablen
+2. **Gap-Detection** - Erkennt fehlende technische + einfache Kommentare
+3. **Prompt-Generation** - Erstellt perfekt formatierte Claude-Aufträge
+4. **Direct-Output** - Du kopierst Prompt → Claude macht den Rest
+
+#### **2. Watch-Mode (Kontinuierlich):**
+1. **Background-Monitoring** - Überwacht Code-Changes alle X Minuten
+2. **Gap-Tracking** - Findet neue undokumentierte Funktionen
+3. **Auto-Prompting** - Schickt Claude automatisch neue Aufträge
+4. **Persistent-Reminders** - Nervt bis alles dokumentiert ist 😄
+
+#### **3. Claude Integration:**
+```
+Neandoc → "Hey Claude, hier fehlen 3 Kommentare..."
+Claude → Schreibt perfekte Dual-Level Dokumentation
+User → Kopiert Kommentare in Code
+Neandoc → "Danke! Überwache weiter..."
+```
 
 ## API Reference
 
@@ -71,45 +98,71 @@ neandoc [directory] [options]
 ```
 
 **Options:**
-- `--readme` - Create or update README.md
-- `--dry-run` - Show preview without making changes  
-- `--only-functions` - Comment only functions
-- `--no-readme` - Skip README generation
+- `--watch` - Watch mode - kontinuierliche Überwachung
+- `--daemon` - Daemon mode - läuft im Hintergrund  
+- `--interval <minutes>` - Check-Intervall in Minuten (default: 5)
+- `--apply <file>` - Claude-Response aus Datei anwenden
+- `--readme` - README.md erstellen/aktualisieren
+- `--dry-run` - Preview ohne Änderungen
+- `--only-functions` - Nur Funktionen kommentieren
+- `--no-readme` - Keine README-Generierung
 
 ### Core Classes
 
-- **Parser** - Multi-language code analysis
-- **Commentor** - AI-powered comment generation
-- **MCPClient** - LLM integration (Claude, OpenAI, MCP)
+- **Parser** - Multi-language code analysis (10+ languages)
+- **NeandocAssistant** - Intelligente Gap-Detection & Claude-Prompting
+- **Commentor** - File-safe comment insertion with backup
 - **ReadmeGenerator** - Intelligent README creation
 
 ## Examples
 
-### Basic Example
+### **Typischer Workflow:**
 
 ```bash
-# Document your entire project
+# 1. Erste Analyse
 npx neandoc ./src
 
-# Output: All files get dual-level comments
-/**
- * Technische Erklärung:
- * Diese Funktion implementiert Benutzereingabe-Validierung mit Regex-Pattern-Matching
- *
- * Einfache Erklärung:  
- * Stell dir vor, das ist wie ein Türsteher - er prüft, ob deine Eingabe die Regeln befolgt, bevor sie reingelassen wird.
- */
-function validateInput(input) {
-  // your code here
+# Output:
+❌ Found 8 documentation gaps across 3 files!
+
+🤖 NEANDOC → CLAUDE
+==================================================
+🦣 NEANDOC COMPREHENSIVE DOCUMENTATION REQUEST
+
+Diese Funktionen brauchen Kommentare:
+
+### validateInput (function) - Line 42
+```javascript
+function validateInput(data) {
+  return data.length > 0 && data.match(/^[a-zA-Z]+$/);
 }
 ```
 
-### Advanced Example
+AUFGABE: Erstelle technische + einfache Erklärungen...
+==================================================
+
+📋 Copy the prompt above and send it to Claude!
+💡 Then run: npx neandoc --apply <claude-response-file>
+```
+
+### **Watch-Mode in Action:**
 
 ```bash
-# Full project documentation workflow
-npx neandoc ./src --readme --dry-run  # Preview first
-npx neandoc ./src --readme            # Apply changes
+# 2. Kontinuierliche Überwachung starten
+npx neandoc ./src --watch --interval 3
+
+# Output:
+🦣 Neandoc watching ./src for documentation gaps...
+📅 Checking every 3 minutes
+
+[14:32:15] 🔍 Checking documentation...
+✅ All code properly documented!
+
+[14:35:15] 🔍 Checking documentation...
+❌ Found 2 documentation gaps!
+🤖 Sending new prompt to Claude...
+
+# → Läuft permanent und nervt Claude bei neuen Lücken! 😄
 ```
 
 ## Configuration
