@@ -4,7 +4,7 @@
   "description": "AI-powered CLI tool for automatic code documentation. Primal Code. Modern Docs.",
   "main": "lib/index.js",
   "bin": {
-    "neandoc": "./bin/cli.js"
+    "neandoc": "bin/cli.js"
   },
   "scripts": {
     "start": "node bin/cli.js",
@@ -22,16 +22,16 @@
     "claude",
     "openai"
   ],
-  "author": "Your Name",
+  "author": "",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/neandoc.git"
+    "url": "git+https://github.com/iamthamanic/neandoc.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/neandoc/issues"
+    "url": "https://github.com/iamthamanic/neandoc/issues"
   },
-  "homepage": "https://github.com/yourusername/neandoc#readme",
+  "homepage": "https://github.com/iamthamanic/neandoc#readme",
   "dependencies": {
     "commander": "^11.1.0",
     "chalk": "^5.3.0",
