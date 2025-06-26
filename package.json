@@ -1,0 +1,50 @@
+{
+  "name": "neandoc",
+  "version": "1.0.0",
+  "description": "AI-powered CLI tool for automatic code documentation. Primal Code. Modern Docs.",
+  "main": "lib/index.js",
+  "bin": {
+    "neandoc": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node bin/cli.js",
+    "test": "jest",
+    "lint": "eslint .",
+    "dev": "node bin/cli.js"
+  },
+  "keywords": [
+    "documentation",
+    "ai",
+    "cli",
+    "code-comments",
+    "readme",
+    "mcp",
+    "claude",
+    "openai"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/neandoc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/neandoc/issues"
+  },
+  "homepage": "https://github.com/yourusername/neandoc#readme",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "chalk": "^5.3.0",
+    "@types/node": "^20.10.0",
+    "fs-extra": "^11.2.0",
+    "glob": "^10.3.10",
+    "chokidar": "^3.5.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
