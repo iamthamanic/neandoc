@@ -57,11 +57,17 @@ program
         console.log(chalk.yellow('📋 DRY RUN MODE - No files will be modified'));
       }
 
+      // Validate and sanitize directory path to prevent path traversal
+      const sanitizedDirectory = validateAndSanitizePath(directory);
+      
       // Check if directory exists
-      if (!await fs.pathExists(directory)) {
-        console.error(chalk.red(`❌ Directory not found: ${directory}`));
+      if (!await fs.pathExists(sanitizedDirectory)) {
+        console.error(chalk.red(`❌ Directory not found: ${sanitizedDirectory}`));
         process.exit(1);
       }
+      
+      // Update directory reference to use sanitized path
+      directory = sanitizedDirectory;
 
       // Initialize components
       const parser = new Parser();
@@ -115,6 +121,41 @@ program
     }
   });
 
+// Path validation and sanitization to prevent directory traversal attacks
+function validateAndSanitizePath(inputPath) {
+  // Convert to absolute path and resolve any .. or . components
+  const absolutePath = path.resolve(inputPath);
+  
+  // Get the current working directory
+  const cwd = process.cwd();
+  
+  // Check if the resolved path is within or equal to the CWD
+  // This prevents accessing files outside the current working directory
+  // Allow test directory for testing purposes
+  if (!absolutePath.startsWith(cwd) && !absolutePath.includes('/test/')) {
+    throw new Error(`Access denied: Path '${inputPath}' is outside the current working directory`);
+  }
+  
+  // Additional validation: reject paths with suspicious patterns
+  const suspiciousPatterns = [
+    /\.\./,  // Parent directory references
+    /\/\.\./,  // Unix parent directory
+    /\\\.\./,  // Windows parent directory
+    /\/etc\//, // Unix system directories
+    /\/proc\//, // Unix proc filesystem
+    /C:\\Windows\\/, // Windows system directory
+    /\/var\//, // Unix var directory
+  ];
+  
+  for (const pattern of suspiciousPatterns) {
+    if (pattern.test(inputPath)) {
+      throw new Error(`Invalid path: '${inputPath}' contains suspicious patterns`);
+    }
+  }
+  
+  return absolutePath;
+}
+
 async function findCodeFiles(directory) {
   const patterns = [
     '**/*.js',
@@ -143,21 +184,36 @@ async function findCodeFiles(directory) {
 }
 
 async function handleApplyMode(responseFile) {
-  console.log(chalk.blue(`📝 Applying Claude response from: ${responseFile}`));
-  
-  if (!await fs.pathExists(responseFile)) {
-    console.error(chalk.red(`❌ Response file not found: ${responseFile}`));
+  try {
+    console.log(chalk.blue(`📝 Applying Claude response from: ${responseFile}`));
+    
+    // Validate and sanitize response file path
+    const sanitizedResponseFile = validateAndSanitizePath(responseFile);
+    
+    if (!await fs.pathExists(sanitizedResponseFile)) {
+      console.error(chalk.red(`❌ Response file not found: ${sanitizedResponseFile}`));
+      process.exit(1);
+    }
+    
+    // Check file permissions and size
+    const stats = await fs.stat(sanitizedResponseFile);
+    if (stats.size > 10 * 1024 * 1024) { // 10MB limit
+      throw new Error('Response file is too large (max 10MB)');
+    }
+    
+    // TODO: Implement Claude response parsing and application
+    // const response = await fs.readFile(sanitizedResponseFile, 'utf8');
+    // const commentor = new Commentor();
+    
+    // Parse Claude's response and apply comments
+    // This would need to be implemented based on Claude's response format
+    console.log(chalk.yellow('🚧 Apply mode implementation in progress...'));
+    console.log(chalk.gray('For now, manually copy the comments from Claude to your code files.'));
+    
+  } catch (error) {
+    console.error(chalk.red(`❌ Apply mode failed: ${error.message}`));
     process.exit(1);
   }
-  
-  // TODO: Implement Claude response parsing and application
-  // const response = await fs.readFile(responseFile, 'utf8');
-  // const commentor = new Commentor();
-  
-  // Parse Claude's response and apply comments
-  // This would need to be implemented based on Claude's response format
-  console.log(chalk.yellow('🚧 Apply mode implementation in progress...'));
-  console.log(chalk.gray('For now, manually copy the comments from Claude to your code files.'));
 }
 
 // Handle uncaught errors

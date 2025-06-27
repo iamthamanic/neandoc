@@ -140,7 +140,7 @@ class TestClass {
         });
       } catch (error) {
         const output = error.stdout + error.stderr;
-        expect(output).toContain('Directory not found:');
+        expect(output).toContain('Access denied:');
       }
     });
   });

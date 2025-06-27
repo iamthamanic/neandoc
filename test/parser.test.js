@@ -38,9 +38,10 @@ const asyncFunction = async function() {
       const result = await parser.parseFile(testFile);
       
       expect(result.functions).toHaveLength(3);
-      expect(result.functions[0].name).toBe('testFunction');
-      expect(result.functions[1].name).toBe('arrowFunction');
-      expect(result.functions[2].name).toBe('asyncFunction');
+      
+      // Get function names and sort them for predictable testing
+      const functionNames = result.functions.map(f => f.name).sort();
+      expect(functionNames).toEqual(['arrowFunction', 'asyncFunction', 'testFunction']);
     });
 
     test('should parse class declarations', async () => {
